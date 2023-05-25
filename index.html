@@ -61,7 +61,7 @@
             $('#demo-result').empty()
 
             const newImg = document.createElement("img")
-            newImg.src = imageSrc
+            newImg.src = imageurl
 
             newImg.onload = function () {
                 const resultCanvas = scanner.extractPaper(newImg, 386, 500);
