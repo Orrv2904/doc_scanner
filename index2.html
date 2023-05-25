@@ -1,0 +1,62 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-32CWY3SB1G"></script>
+  <script>function gtag() { dataLayer.push(arguments) } window.dataLayer = window.dataLayer || [], gtag("js", new Date), gtag("config", "G-32CWY3SB1G")</script>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>jscanify - Javascript mobile document scanner</title>
+  <meta name="description" content="Open-source pure Javascript implemented mobile document scanner." />
+  <meta property="og:title" content="jscanify" />
+  <meta property="og:description" content="Open-source pure Javascript implemented mobile document scanner." />
+  <meta property="og:url" content="https://colonelparrot.github.io/jscanify/" />
+  <meta property="og:image" content="https://colonelparrot.github.io/jscanify/images/logo.png" />
+  <meta property="og:locale" content="en_US" />
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <link rel="stylesheet" href="https://colonelparrot.github.io/jscanify/index.css" />
+</head>
+
+<body>
+   
+    <div id="content">
+    <div id="demo-title">
+      <h1 style="margin-bottom: 0">Demo</h1>
+      <p style="margin-top: 0">Select an image below to scan</p>
+    </div>
+    <div id="demo">
+      <div id="demo-images">
+        <div class="image-container">
+          <img src="01.jpeg" data-url="01.jpeg" alt="jscanify test image 1" />
+        </div>
+        <div class="image-container" style="margin-bottom: 0">
+          <img src="test2-sized.png" data-url="test2-sized.png" alt="jscanify test image 2" />
+        </div>
+      </div>
+      <div id="arrow"></div>
+      <div id="demo-result">
+        Scan results will appear here
+      </div>
+    </div>
+  <script src="https://cdn.jsdelivr.net/gh/ColonelParrot/jscanify@latest/src/jscanify.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://colonelparrot.github.io/jscanify/script.js"></script>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"
+    integrity="sha512-bgHRAiTjGrzHzLyKOnpFvaEpGzJet3z4tZnXGjpsCcqOnAH6VGUx9frc5bcIhKTVLEiCO6vEhNAgx5jtLUYrfA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" async></script>
+  <script>
+    $(window).on('load', function () {
+      hljs.highlightAll();
+    })
+  </script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/a11y-light.min.css"
+    integrity="sha512-WDk6RzwygsN9KecRHAfm9HTN87LQjqdygDmkHSJxVkVI7ErCZ8ZWxP6T8RvBujY1n2/E4Ac+bn2ChXnp5rnnHA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+</body>
+
+</html>
