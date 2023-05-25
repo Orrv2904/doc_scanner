@@ -22,6 +22,10 @@
     <div id="demo-result">
 
     </div>
+
+    <div class="image-container" style="margin-bottom: 0">
+        <img src="images/test/test2-sized.png" data-url="images/test/test2.png" alt="jscanify test image 2" />
+      </div>
     <button id="scan">
         Escanear documento
     </button>
@@ -34,45 +38,46 @@
 <script>
     let loadedOpenCV = false
 
-    const openCvURL = "https://docs.opencv.org/4.7.0/opencv.js"
+const openCvURL = "https://docs.opencv.org/4.7.0/opencv.js"
 
-    function loadOpenCV(onComplete) {
-        if (loadedOpenCV) {
-            onComplete()
-        } else {
-            $('#demo-result').text('Loading OpenCV...')
-            const script = document.createElement("script")
-            script.src = openCvURL
+function loadOpenCV(onComplete) {
+    if (loadedOpenCV) {
+        onComplete()
+    } else {
+        $('#demo-result').text('Loading OpenCV...')
+        const script = document.createElement("script")
+        script.src = openCvURL
 
-            script.onload = function () {
-                setTimeout(function () {
-                    onComplete()
-                }, 1000)
-                loadedOpenCV = true
-            }
-            document.body.appendChild(script)
+        script.onload = function () {
+            setTimeout(function () {
+                onComplete()
+            }, 1000)
+            loadedOpenCV = true
         }
+        document.body.appendChild(script)
     }
+}
 
-    const scanner = new jscanify()
-    $('#scan').click(function () {
-        const imageurl = $('#imageElement').data('url')
-        loadOpenCV(function () {
-            $('#demo-result').empty()
+const scanner = new jscanify()
+$('#demo-images .image-container').click(function () {
+    $('.image-container.selected').removeClass('selected')
+    $(this).addClass('selected')
+    const imageSrc = $(this).find('img').data('url')
+    loadOpenCV(function () {
+        $('#demo-result').empty()
 
-            const newImg = document.createElement("img")
-            newImg.src = imageurl
+        const newImg = document.createElement("img")
+        newImg.src = imageSrc
 
-            newImg.onload = function () {
-                const resultCanvas = scanner.extractPaper(newImg, 386, 500);
-                $('#demo-result').append(resultCanvas);
-
-                const highlightedCanvas = scanner.highlightPaper(newImg)
-                $('#demo-result').append(highlightedCanvas);
-            }
+        newImg.onload = function(){
+            const resultCanvas = scanner.extractPaper(newImg, 386, 500);
+            $('#demo-result').append(resultCanvas);
+                
+            const highlightedCanvas = scanner.highlightPaper(newImg)
+            $('#demo-result').append(highlightedCanvas);
         }
-        )
     })
+})
 </script>
 
 </html>
