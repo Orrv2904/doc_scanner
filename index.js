@@ -33,22 +33,18 @@ function captureImage() {
   const img = document.createElement('img');
   img.src = canvas.toDataURL('image/png');
 
-  // Crear un contenedor de imagen
-  const imageContainer = document.createElement('div');
-  imageContainer.classList.add('image-container');
+  // Mostrar la imagen capturada en la etiqueta <img>
+  imageElement.src = img.src;
+  imageElement.setAttribute('data-url', img.src);
 
-  // Agregar la imagen al contenedor
-  const newImg = document.createElement('img');
-  newImg.src = img.src;
-  newImg.setAttribute('data-url', img.src);
-  newImg.alt = 'Imagen capturada';
+  const newDiv = ```
+  <div class="image-container" style="margin-bottom: 0">
+          <img src="${img.src}" data-url="${img.src}" alt="jscanify test image 2" />
+    </div>
+  ```
 
-  imageContainer.appendChild(newImg);
-
-  // Agregar el contenedor de imagen al arreglo de imágenes
-  const demoImages = document.getElementById('demo-images');
-  demoImages.appendChild(imageContainer);
-  addImg()
+  $("#demo-images").append(newDiv);
+  addImg();
 }
 
 function addImg() {
