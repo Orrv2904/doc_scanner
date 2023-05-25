@@ -10,7 +10,10 @@ let stream;
 async function openCamera() {
   try {
     // Solicitar permiso para acceder a la cámara
-    stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    //stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: 'environment' } // Seleccionar cámara trasera
+    });
     // Mostrar el video en el elemento de video
     videoElement.srcObject = stream;
   } catch (error) {
