@@ -3,7 +3,7 @@ const openBtn = document.getElementById('openBtn');
 const captureBtn = document.getElementById('captureBtn');
 const closeBtn = document.getElementById('closeBtn');
 const videoElement = document.getElementById('videoElement');
-const canvasElement = document.getElementById('canvasElement');
+const imageElement = document.getElementById('imageElement');
 let stream;
 
 // Función para abrir la cámara
@@ -20,22 +20,20 @@ async function openCamera() {
 
 // Función para tomar una captura de imagen
 function captureImage() {
-  // Establecer el tamaño del lienzo igual al tamaño del video
-  canvasElement.width = videoElement.videoWidth;
-  canvasElement.height = videoElement.videoHeight;
+  // Crear un lienzo temporal
+  const canvas = document.createElement('canvas');
+  canvas.width = videoElement.videoWidth;
+  canvas.height = videoElement.videoHeight;
   
   // Dibujar el video en el lienzo
-  const context = canvasElement.getContext('2d');
-  context.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
+  const context = canvas.getContext('2d');
+  context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
   
   // Obtener la imagen capturada en formato base64
-  const imageData = canvasElement.toDataURL('image/png');
+  const imageData = canvas.toDataURL('image/png');
   
-  // Mostrar la imagen capturada en una nueva ventana o en la consola
-  const image = new Image();
-  image.src = imageData;
-  const w = window.open("");
-  w.document.write(image.outerHTML);
+  // Mostrar la imagen capturada en la etiqueta <img>
+  imageElement.src = imageData;
 }
 
 // Función para cerrar la cámara
