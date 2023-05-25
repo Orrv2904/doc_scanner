@@ -34,6 +34,22 @@ function captureImage() {
 
   // Mostrar la imagen capturada en la etiqueta <img>
   imageElement.src = img.src;
+
+  // Escanear la imagen capturada con JScanify
+  const jscanify = new JScanify();
+  jscanify.scan(img.src, { crop: true })
+    .then(result => {
+      // Mostrar el documento escaneado recortado
+      const scannedImage = result.croppedImage;
+      const scannedImgElement = document.createElement('img');
+      scannedImgElement.src = scannedImage;
+      const scannedImageContainer = document.getElementById('scannedImageContainer');
+      scannedImageContainer.innerHTML = '';
+      scannedImageContainer.appendChild(scannedImgElement);
+    })
+    .catch(error => {
+      console.error('Error al escanear la imagen: ', error);
+    });
 }
 
 // Función para cerrar la cámara
