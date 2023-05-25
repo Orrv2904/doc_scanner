@@ -37,13 +37,19 @@ function captureImage() {
   imageElement.src = img.src;
   imageElement.setAttribute('data-url', img.src);
 
-  const newDiv = ```
-  <div class="image-container" style="margin-bottom: 0">
-          <img src="${img.src}" data-url="${img.src}" alt="jscanify test image 2" />
-    </div>
-  ```
+  const newDiv = document.createElement('div');
+  newDiv.className = 'image-container';
+  newDiv.style.marginBottom = '0';
 
-  $("#demo-images").append(newDiv);
+  const newImg = document.createElement('img');
+  newImg.src = img.src;
+  newImg.setAttribute('data-url', img.src);
+  newImg.alt = 'jscanify test image 2';
+
+  newDiv.appendChild(newImg);
+
+  const demoImages = document.getElementById('demo-images');
+  demoImages.appendChild(newDiv);
   addImg();
 }
 
@@ -91,4 +97,4 @@ function closeCamera() {
 // Asignar eventos a los botones
 openBtn.addEventListener('click', openCamera);
 captureBtn.addEventListener('click', captureImage);
-closeBtn.addEventListener('click', closeCamera);
+// closeBtn.addEventListener('click', closeCamera);
