@@ -9,101 +9,73 @@
 </head>
 
 <body>
-    <!-- capturar la imagen por medio de la cámara -->
+    <!-- capturar la imagen por medio de la camara -->
+    <button id="openBtn">Abrir cámara</button>
     <button id="openBtn">Abrir cámara</button>
     <button id="captureBtn">Capturar imagen</button>
     <button id="closeBtn">Cerrar cámara</button>
     <video id="videoElement" autoplay></video>
     <img id="imageElement" alt="Imagen capturada">
-    <!-- termina la parte de capturar la imagen con la cámara -->
+    <!-- termina la parte de capturar la imagen con la camara -->
 
     <!-- escanear el documento -->
-    <div id="demo-result"></div>
+    <div id="demo-result">
+
+    </div>
 
     <div class="image-container" style="margin-bottom: 0">
         <img src="https://colonelparrot.github.io/jscanify/images/test/test-sized.png" data-url="https://colonelparrot.github.io/jscanify/images/test/test-sized.png" alt="jscanify test image 2" />
-    </div>
+      </div>
     <button id="scan">
         Escanear documento
     </button>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jscanify@latest"></script>
-    <script>
-        const openBtn = document.getElementById('openBtn');
-        const captureBtn = document.getElementById('captureBtn');
-        const closeBtn = document.getElementById('closeBtn');
-        const videoElement = document.getElementById('videoElement');
-        const imageElement = document.getElementById('imageElement');
-        let stream;
-        let imageUrl;
-
-        // Función para abrir la cámara
-        async function openCamera() {
-            try {
-                // Solicitar permiso para acceder a la cámara
-                stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                // Mostrar el video en el elemento de video
-                videoElement.srcObject = stream;
-            } catch (error) {
-                console.error('Error al acceder a la cámara: ', error);
-            }
-        }
-
-        // Función para tomar una captura de imagen
-        function captureImage() {
-            // Crear un lienzo temporal
-            const canvas = document.createElement('canvas');
-            canvas.width = videoElement.videoWidth;
-            canvas.height = videoElement.videoHeight;
-
-            const context = canvas.getContext('2d');
-            context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
-
-            // Crear un elemento de imagen para mostrar la captura
-            const img = document.createElement('img');
-            img.src = canvas.toDataURL('image/png');
-
-            // Mostrar la imagen capturada en la etiqueta <img>
-            imageElement.src = img.src;
-
-            // Guardar la URL de la imagen capturada
-            imageUrl = img.src;
-        }
-
-        // Función para cerrar la cámara
-        function closeCamera() {
-            // Detener el flujo de video
-            if (stream) {
-                const tracks = stream.getTracks();
-                tracks.forEach(track => track.stop());
-                videoElement.srcObject = null;
-            }
-        }
-
-        // Función para escanear el documento
-        function scanDocument() {
-            const scanner = new JScanify();
-            const demoResult = document.getElementById('demo-result');
-            demoResult.innerHTML = '';
-
-            const image = new Image();
-            image.onload = function () {
-                const resultCanvas = scanner.extractPaper(image, 386, 500);
-                demoResult.appendChild(resultCanvas);
-
-                const highlightedCanvas = scanner.highlightPaper(image);
-                demoResult.appendChild(highlightedCanvas);
-            };
-            image.src = imageUrl;
-        }
-
-        // Asignar eventos a los botones
-        openBtn.addEventListener('click', openCamera);
-        captureBtn.addEventListener('click', captureImage);
-        closeBtn.addEventListener('click', closeCamera);
-        document.getElementById('scan').addEventListener('click', scanDocument);
-    </script>
 </body>
+
+<script src="./index.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/ColonelParrot/jscanify@latest/src/jscanify.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+    let loadedOpenCV = false
+
+const openCvURL = "https://docs.opencv.org/4.7.0/opencv.js"
+
+function loadOpenCV(onComplete) {
+    if (loadedOpenCV) {
+        onComplete()
+    } else {
+        $('#demo-result').text('Loading OpenCV...')
+        const script = document.createElement("script")
+        script.src = openCvURL
+
+        script.onload = function () {
+            setTimeout(function () {
+                onComplete()
+            }, 1000)
+            loadedOpenCV = true
+        }
+        document.body.appendChild(script)
+    }
+}
+
+const scanner = new jscanify()
+$('#scan').click(function () {
+    const imageSrc = $(this).find('img').data('url')
+    loadOpenCV(function () {
+        $('#demo-result').empty()
+
+        const newImg = document.createElement("img")
+        newImg.src = imageSrc
+
+        newImg.onload = function(){
+            const resultCanvas = scanner.extractPaper(newImg, 386, 500);
+            $('#demo-result').append(resultCanvas);
+                
+            const highlightedCanvas = scanner.highlightPaper(newImg)
+            $('#demo-result').append(highlightedCanvas);
+        }
+    })
+})
+</script>
 
 </html>

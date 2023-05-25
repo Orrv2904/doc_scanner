@@ -34,6 +34,7 @@ function captureImage() {
 
   // Mostrar la imagen capturada en la etiqueta <img>
   imageElement.src = img.src;
+  imageElement.setAttribute('data-url', img.src);
 }
 
 // Función para cerrar la cámara
