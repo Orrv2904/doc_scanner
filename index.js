@@ -51,6 +51,36 @@ function captureImage() {
 
 }
 
+function addImg() {
+  const imageContainers = document.querySelectorAll('#demo-images .image-container');
+
+  imageContainers.forEach(function (container) {
+    container.addEventListener('click', function () {
+      const selectedContainer = document.querySelector('.image-container.selected');
+      if (selectedContainer) {
+        selectedContainer.classList.remove('selected');
+      }
+      container.classList.add('selected');
+
+      const imageSrc = container.querySelector('img').getAttribute('data-url');
+      loadOpenCV(function () {
+        const demoResult = document.getElementById('demo-result');
+        demoResult.innerHTML = '';
+
+        const newImg = document.createElement('img');
+        newImg.src = imageSrc;
+
+        newImg.onload = function () {
+          const resultCanvas = scanner.extractPaper(newImg, 386, 500);
+          demoResult.appendChild(resultCanvas);
+
+          const highlightedCanvas = scanner.highlightPaper(newImg);
+          demoResult.appendChild(highlightedCanvas);
+        };
+      });
+    });
+  });
+}
 
 // Función para cerrar la cámara
 function closeCamera() {
