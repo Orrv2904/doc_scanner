@@ -15,7 +15,7 @@
     <button id="captureBtn">Capturar imagen</button>
     <button id="closeBtn">Cerrar cámara</button>
     <video id="videoElement" autoplay></video>
-    <img id="imageElement" alt="Imagen capturada">    
+    <img id="imageElement" alt="Imagen capturada">
     <!-- termina la parte de capturar la imagen con la camara -->
 
     <!-- escanear el documento -->
@@ -31,11 +31,48 @@
 <script src="https://cdn.jsdelivr.net/gh/ColonelParrot/jscanify@latest/src/jscanify.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-<!-- <script>
-    const scanner = new jscanify()
-    $('#scan').click(function (){
+<script>
+    let loadedOpenCV = false
 
+    const openCvURL = "https://docs.opencv.org/4.7.0/opencv.js"
+
+    function loadOpenCV(onComplete) {
+        if (loadedOpenCV) {
+            onComplete()
+        } else {
+            $('#demo-result').text('Loading OpenCV...')
+            const script = document.createElement("script")
+            script.src = openCvURL
+
+            script.onload = function () {
+                setTimeout(function () {
+                    onComplete()
+                }, 1000)
+                loadedOpenCV = true
+            }
+            document.body.appendChild(script)
+        }
+    }
+
+    const scanner = new jscanify()
+    $('#scan').click(function () {
+        const imageurl = $('#imageElement').data('url')
+        loadOpenCV(function () {
+            $('#demo-result').empty()
+
+            const newImg = document.createElement("img")
+            newImg.src = imageSrc
+
+            newImg.onload = function () {
+                const resultCanvas = scanner.extractPaper(newImg, 386, 500);
+                $('#demo-result').append(resultCanvas);
+
+                const highlightedCanvas = scanner.highlightPaper(newImg)
+                $('#demo-result').append(highlightedCanvas);
+            }
+        }
+        )
     })
-</script> -->
+</script>
 
 </html>
