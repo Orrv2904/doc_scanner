@@ -40,6 +40,28 @@
         Scan results will appear here
       </div>
     </div>
+
+
+    <div id="Test">
+        <button id="openBtn">Abrir cámara</button>
+        <button id="captureBtn">Capturar imagen</button>
+        <video id="videoElement" autoplay></video>
+        <img id="imageElement" alt="Imagen capturada">
+
+        <div class="image-container" style="margin-bottom: 0">
+            <img src="https://colonelparrot.github.io/jscanify/images/test/test-sized.png" data-url="https://colonelparrot.github.io/jscanify/images/test/test-sized.png" alt="jscanify test image 2" />
+          </div>
+
+        <div id="demo-result"></div>
+
+        <button id="scan">
+            Escanear documento
+        </button>
+    </div>
+
+
+
+
   <script src="https://cdn.jsdelivr.net/gh/ColonelParrot/jscanify@latest/src/jscanify.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://colonelparrot.github.io/jscanify/script.js"></script>
@@ -57,6 +79,9 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/a11y-light.min.css"
     integrity="sha512-WDk6RzwygsN9KecRHAfm9HTN87LQjqdygDmkHSJxVkVI7ErCZ8ZWxP6T8RvBujY1n2/E4Ac+bn2ChXnp5rnnHA=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+  <script src="index.js"></script>
 </body>
 
 </html>

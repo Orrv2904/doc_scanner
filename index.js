@@ -18,7 +18,8 @@ async function openCamera() {
   }
 }
 
-// Función para tomar una captura de imagen
+// Función para tomar una captura de image
+
 function captureImage() {
   // Crear un lienzo temporal
   const canvas = document.createElement('canvas');
@@ -32,10 +33,23 @@ function captureImage() {
   const img = document.createElement('img');
   img.src = canvas.toDataURL('image/png');
 
-  // Mostrar la imagen capturada en la etiqueta <img>
-  imageElement.src = img.src;
-  imageElement.setAttribute('data-url', img.src);
+  // Crear un contenedor de imagen
+  const imageContainer = document.createElement('div');
+  imageContainer.classList.add('image-container');
+
+  // Agregar la imagen al contenedor
+  const newImg = document.createElement('img');
+  newImg.src = img.src;
+  newImg.setAttribute('data-url', img.src);
+  newImg.alt = 'Imagen capturada';
+
+  imageContainer.appendChild(newImg);
+
+  // Agregar el contenedor de imagen al arreglo de imágenes
+  const demoImages = document.getElementById('demo-images');
+  demoImages.appendChild(imageContainer);
 }
+
 
 // Función para cerrar la cámara
 function closeCamera() {
