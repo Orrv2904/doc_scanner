@@ -48,7 +48,7 @@ function captureImage() {
   // Agregar el contenedor de imagen al arreglo de imágenes
   const demoImages = document.getElementById('demo-images');
   demoImages.appendChild(imageContainer);
-
+  addImg()
 }
 
 function addImg() {
