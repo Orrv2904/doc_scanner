@@ -44,7 +44,7 @@ function captureImage() {
   // filtro de nitidez
 
   Caman(img, function () {
-    this.sharpen(20); // Ajusta el valor según el grado de nitidez deseado
+    this.sharpen(50); // Ajusta el valor según el grado de nitidez deseado
     this.render(function () {
       // Mostrar la imagen filtrada
       imageElement.src = this.toDataURL();
