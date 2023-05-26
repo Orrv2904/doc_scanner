@@ -1,4 +1,3 @@
-// Obtener referencias a los elementos del DOM
 const openBtn = document.getElementById('openBtn');
 const captureBtn = document.getElementById('captureBtn');
 const closeBtn = document.getElementById('closeBtn');
@@ -18,48 +17,17 @@ async function openCamera() {
       }
     };
 
-    const stream = await navigator.mediaDevices.getUserMedia(constraints);
+    // Obtener el stream de la cámara con los nuevos constraints
+    stream = await navigator.mediaDevices.getUserMedia(constraints);
 
-    const track = stream.getVideoTracks()[0];
-    const capabilities = track.getCapabilities();
-    const settings = track.getSettings();
-
-    // Redimensionar la resolución si es necesario
-    if (settings.width > 1280 || settings.height > 720) {
-      const aspectRatio = settings.width / settings.height;
-      let newWidth = 1280;
-      let newHeight = 720;
-
-      if (aspectRatio > 1) {
-        newHeight = Math.floor(newWidth / aspectRatio);
-      } else {
-        newWidth = Math.floor(newHeight * aspectRatio);
-      }
-
-      const updatedConstraints = {
-        video: {
-          width: { ideal: newWidth },
-          height: { ideal: newHeight },
-        },
-      };
-
-      stream.getTracks().forEach((track) => {
-        track.stop();
-      });
-
-      const updatedStream = await navigator.mediaDevices.getUserMedia(updatedConstraints);
-      videoElement.srcObject = updatedStream;
-    } else {
-      videoElement.srcObject = stream;
-    }
+    // Mostrar el video en el elemento de video
+    videoElement.srcObject = stream;
   } catch (error) {
     console.error('Error al acceder a la cámara: ', error);
   }
 }
 
-
-// Función para tomar una captura de image
-
+// Función para capturar la imagen de la cámara
 function captureImage() {
   // Crear un lienzo temporal
   const canvas = document.createElement('canvas');
@@ -70,13 +38,14 @@ function captureImage() {
   context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
 
   // Crear un elemento de imagen para mostrar la captura
-  const img = document.createElement('img');
+  const img = new Image();
   img.src = canvas.toDataURL('image/png');
 
-  // Mostrar la imagen capturada en la etiqueta <img>
+  // Mostrar la imagen capturada en el elemento img
   imageElement.src = img.src;
   imageElement.setAttribute('data-url', img.src);
 
+  // Agregar la imagen capturada al arreglo de imágenes
   const newDiv = document.createElement('div');
   newDiv.className = 'image-container';
   newDiv.style.marginBottom = '0';
@@ -90,36 +59,30 @@ function captureImage() {
 
   const demoImages = document.getElementById('demo-images');
   demoImages.appendChild(newDiv);
-  addImg();
-}
 
-function addImg() {
-  const imageContainers = document.querySelectorAll('#demo-images .image-container');
+  // Asignar eventos a la nueva imagen capturada
+  newDiv.addEventListener('click', function () {
+    const selectedContainer = document.querySelector('.image-container.selected');
+    if (selectedContainer) {
+      selectedContainer.classList.remove('selected');
+    }
+    newDiv.classList.add('selected');
 
-  imageContainers.forEach(function (container) {
-    container.addEventListener('click', function () {
-      const selectedContainer = document.querySelector('.image-container.selected');
-      if (selectedContainer) {
-        selectedContainer.classList.remove('selected');
-      }
-      container.classList.add('selected');
+    const imageSrc = newImg.getAttribute('data-url');
+    loadOpenCV(function () {
+      const demoResult = document.getElementById('demo-result');
+      demoResult.innerHTML = '';
 
-      const imageSrc = container.querySelector('img').getAttribute('data-url');
-      loadOpenCV(function () {
-        const demoResult = document.getElementById('demo-result');
-        demoResult.innerHTML = '';
+      const resultImg = document.createElement('img');
+      resultImg.src = imageSrc;
 
-        const newImg = document.createElement('img');
-        newImg.src = imageSrc;
+      resultImg.onload = function () {
+        const resultCanvas = scanner.extractPaper(resultImg, 386, 500);
+        demoResult.appendChild(resultCanvas);
 
-        newImg.onload = function () {
-          const resultCanvas = scanner.extractPaper(newImg, 386, 500);
-          demoResult.appendChild(resultCanvas);
-
-          const highlightedCanvas = scanner.highlightPaper(newImg);
-          demoResult.appendChild(highlightedCanvas);
-        };
-      });
+        const highlightedCanvas = scanner.highlightPaper(resultImg);
+        demoResult.appendChild(highlightedCanvas);
+      };
     });
   });
 }
@@ -137,4 +100,4 @@ function closeCamera() {
 // Asignar eventos a los botones
 openBtn.addEventListener('click', openCamera);
 captureBtn.addEventListener('click', captureImage);
-// closeBtn.addEventListener('click', closeCamera);
+closeBtn.addEventListener('click', closeCamera);
