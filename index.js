@@ -51,6 +51,7 @@ function captureImage() {
     });
   });
 
+  
   // Mostrar la imagen capturada en el elemento img
   imageElement.src = img.src;
   imageElement.setAttribute('data-url', img.src);
