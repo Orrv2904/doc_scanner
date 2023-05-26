@@ -9,12 +9,17 @@ let stream;
 // Función para abrir la cámara
 async function openCamera() {
   try {
-    // Solicitar permiso para acceder a la cámara
-    //stream = await navigator.mediaDevices.getUserMedia({ video: true });
-    stream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: 'environment' } // Seleccionar cámara trasera
-    });
-    // Mostrar el video en el elemento de video
+    const constraints = {
+      video: {
+        facingMode: 'environment',
+        width: { ideal: 1920 },
+        height: { ideal: 1080 },
+        frameRate: { ideal: 30, max: 60 }
+      }
+    };
+
+    stream = await navigator.mediaDevices.getUserMedia(constraints);
+
     videoElement.srcObject = stream;
   } catch (error) {
     console.error('Error al acceder a la cámara: ', error);
