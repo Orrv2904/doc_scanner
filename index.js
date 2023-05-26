@@ -18,13 +18,45 @@ async function openCamera() {
       }
     };
 
-    stream = await navigator.mediaDevices.getUserMedia(constraints);
+    const stream = await navigator.mediaDevices.getUserMedia(constraints);
 
-    videoElement.srcObject = stream;
+    const track = stream.getVideoTracks()[0];
+    const capabilities = track.getCapabilities();
+    const settings = track.getSettings();
+
+    // Redimensionar la resolución si es necesario
+    if (settings.width > 1280 || settings.height > 720) {
+      const aspectRatio = settings.width / settings.height;
+      let newWidth = 1280;
+      let newHeight = 720;
+
+      if (aspectRatio > 1) {
+        newHeight = Math.floor(newWidth / aspectRatio);
+      } else {
+        newWidth = Math.floor(newHeight * aspectRatio);
+      }
+
+      const updatedConstraints = {
+        video: {
+          width: { ideal: newWidth },
+          height: { ideal: newHeight },
+        },
+      };
+
+      stream.getTracks().forEach((track) => {
+        track.stop();
+      });
+
+      const updatedStream = await navigator.mediaDevices.getUserMedia(updatedConstraints);
+      videoElement.srcObject = updatedStream;
+    } else {
+      videoElement.srcObject = stream;
+    }
   } catch (error) {
     console.error('Error al acceder a la cámara: ', error);
   }
 }
+
 
 // Función para tomar una captura de image
 
