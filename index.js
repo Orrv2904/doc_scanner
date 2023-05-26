@@ -28,6 +28,7 @@ async function openCamera() {
 }
 
 // Función para capturar la imagen de la cámara
+// Función para capturar la imagen de la cámara
 function captureImage() {
   // Crear un lienzo temporal
   const canvas = document.createElement('canvas');
@@ -41,61 +42,63 @@ function captureImage() {
   const img = new Image();
   img.src = canvas.toDataURL('image/png');
 
-  // filtro de nitidez
-
+  // Aplicar el filtro de nitidez utilizando CamanJS
   Caman(img, function () {
     this.sharpen(50); // Ajusta el valor según el grado de nitidez deseado
     this.render(function () {
       // Mostrar la imagen filtrada
-      imageElement.src = this.toDataURL();
+      const filteredImgSrc = this.toDataURL();
+      imageElement.src = filteredImgSrc;
+      imageElement.setAttribute('data-url', filteredImgSrc);
+
+      // Agregar la imagen capturada al arreglo de imágenes
+      const newDiv = document.createElement('div');
+      newDiv.className = 'image-container';
+      newDiv.style.marginBottom = '0';
+
+      const newImg = document.createElement('img');
+      newImg.src = filteredImgSrc;
+      newImg.setAttribute('data-url', filteredImgSrc);
+      newImg.alt = 'jscanify test image 2';
+
+      newDiv.appendChild(newImg);
+
+      const demoImages = document.getElementById('demo-images');
+      demoImages.appendChild(newDiv);
+
+      // Asignar eventos a la nueva imagen capturada
+      newDiv.addEventListener('click', function () {
+        const selectedContainer = document.querySelector('.image-container.selected');
+        if (selectedContainer) {
+          selectedContainer.classList.remove('selected');
+        }
+        newDiv.classList.add('selected');
+
+        const imageSrc = newImg.getAttribute('data-url');
+        loadOpenCV(function () {
+          const demoResult = document.getElementById('demo-result');
+          demoResult.innerHTML = '';
+
+          const resultImg = document.createElement('img');
+          resultImg.src = imageSrc;
+
+          resultImg.onload = function () {
+            const resultCanvas = scanner.extractPaper(resultImg, 386, 500);
+            demoResult.appendChild(resultCanvas);
+
+            const highlightedCanvas = scanner.highlightPaper(resultImg);
+            demoResult.appendChild(highlightedCanvas);
+          };
+        });
+      });
     });
   });
 
   // Mostrar la imagen capturada en el elemento img
   imageElement.src = img.src;
   imageElement.setAttribute('data-url', img.src);
-
-  // Agregar la imagen capturada al arreglo de imágenes
-  const newDiv = document.createElement('div');
-  newDiv.className = 'image-container';
-  newDiv.style.marginBottom = '0';
-
-  const newImg = document.createElement('img');
-  newImg.src = img.src;
-  newImg.setAttribute('data-url', img.src);
-  newImg.alt = 'jscanify test image 2';
-
-  newDiv.appendChild(newImg);
-
-  const demoImages = document.getElementById('demo-images');
-  demoImages.appendChild(newDiv);
-
-  // Asignar eventos a la nueva imagen capturada
-  newDiv.addEventListener('click', function () {
-    const selectedContainer = document.querySelector('.image-container.selected');
-    if (selectedContainer) {
-      selectedContainer.classList.remove('selected');
-    }
-    newDiv.classList.add('selected');
-
-    const imageSrc = newImg.getAttribute('data-url');
-    loadOpenCV(function () {
-      const demoResult = document.getElementById('demo-result');
-      demoResult.innerHTML = '';
-
-      const resultImg = document.createElement('img');
-      resultImg.src = imageSrc;
-
-      resultImg.onload = function () {
-        const resultCanvas = scanner.extractPaper(resultImg, 386, 500);
-        demoResult.appendChild(resultCanvas);
-
-        const highlightedCanvas = scanner.highlightPaper(resultImg);
-        demoResult.appendChild(highlightedCanvas);
-      };
-    });
-  });
 }
+
 
 // Función para cerrar la cámara
 function closeCamera() {
