@@ -28,7 +28,6 @@ async function openCamera() {
 }
 
 // Función para capturar la imagen de la cámara
-// Función para capturar la imagen de la cámara
 function captureImage() {
   // Crear un lienzo temporal
   const canvas = document.createElement('canvas');
@@ -38,27 +37,24 @@ function captureImage() {
   const context = canvas.getContext('2d');
   context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
 
-  // Obtener la imagen en formato de matriz de píxeles
-  const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-  const src = cv.matFromImageData(imageData);
+  // Crear un elemento de imagen para mostrar la captura
+  const img = new Image();
+  img.src = canvas.toDataURL('image/png');
 
-  // Crear una matriz para almacenar la imagen filtrada
-  const dst = new cv.Mat();
+  // filtro de nitidez
 
-  // Aplicar el filtro de enfoque
-  const kernel = new cv.Mat([-1, -1, -1, -1, 9, -1, -1, -1, -1], cv.CV_8S);
-  cv.filter2D(src, dst, -1, kernel, new cv.Point(-1, -1), 0, cv.BORDER_DEFAULT);
+  Caman(img, function () {
+    this.sharpen(40); // Ajusta el valor según el grado de nitidez deseado
+    this.render(function () {
+      // Mostrar la imagen filtrada
+      imageElement.src = this.toDataURL();
+    });
+  });
 
-  // Mostrar la imagen filtrada en el elemento img
-  const filteredImageData = new ImageData(new Uint8ClampedArray(dst.data), dst.cols, dst.rows);
-  context.putImageData(filteredImageData, 0, 0);
-  const filteredImgSrc = canvas.toDataURL('image/png');
-  imageElement.src = filteredImgSrc;
-  imageElement.setAttribute('data-url', filteredImgSrc);
 
-  // Liberar memoria
-  src.delete();
-  dst.delete();
+  // Mostrar la imagen capturada en el elemento img
+  imageElement.src = img.src;
+  imageElement.setAttribute('data-url', img.src);
 
   // Agregar la imagen capturada al arreglo de imágenes
   const newDiv = document.createElement('div');
@@ -66,8 +62,8 @@ function captureImage() {
   newDiv.style.marginBottom = '0';
 
   const newImg = document.createElement('img');
-  newImg.src = filteredImgSrc;
-  newImg.setAttribute('data-url', filteredImgSrc);
+  newImg.src = img.src;
+  newImg.setAttribute('data-url', img.src);
   newImg.alt = 'jscanify test image 2';
 
   newDiv.appendChild(newImg);
@@ -101,7 +97,6 @@ function captureImage() {
     });
   });
 }
-
 
 // Función para cerrar la cámara
 function closeCamera() {
