@@ -41,6 +41,16 @@ function captureImage() {
   const img = new Image();
   img.src = canvas.toDataURL('image/png');
 
+  // filtro de nitidez
+
+  Caman(img, function () {
+    this.sharpen(20); // Ajusta el valor según el grado de nitidez deseado
+    this.render(function () {
+      // Mostrar la imagen filtrada
+      imageElement.src = this.toDataURL();
+    });
+  });
+
   // Mostrar la imagen capturada en el elemento img
   imageElement.src = img.src;
   imageElement.setAttribute('data-url', img.src);
